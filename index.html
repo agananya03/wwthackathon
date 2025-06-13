@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NARINIVESH - Smart Financial Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .language-selector {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            padding: 2rem 0;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .message.user {
+            background: #e3f2fd;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.ai {
+            background: #f3e5f5;
+            margin-right: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Gamification */
+        .badges {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: linear-gradient(45deg, #ffd700, #ffb347);
+            color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Learning Paths */
+        .learning-paths {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .path-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .path-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .path-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">नारिणिवेश</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#learn">Learn</a></li>
+                <li><a href="#chat">Chat</a></li>
+                <li><a href="#progress">Progress</a></li>
+            </ul>
+            <select class="language-selector" id="languageSelect">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="bn">বাংলা</option>
+            </select>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="container">
+                <h1 id="heroTitle">नारिणिवेश - Smart Financial Learning</h1>
+                <p id="heroSubtitle">Learn financial literacy through AI-powered chat in your local language</p>
+                <button class="cta-button" onclick="showOnboarding()">Start Your Journey</button>
+            </div>
+        </section>
+
+        <section class="dashboard container" id="dashboard">
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>Your Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgress" style="width: 45%"></div>
+                    </div>
+                    <p>45% Complete - Keep going!</p>
+                    <div class="badges">
+                        <div class="badge">🏆 Beginner</div>
+                        <div class="badge">💰 Saver</div>
+                        <div class="badge">📈 Investor</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>Personalized Advice</h3>
+                    <div id="personalizedAdvice">
+                        <p><strong>Based on your profile:</strong></p>
+                        <p>• Start with a ₹500/month SIP</p>
+                        <p>• Build emergency fund of ₹50,000</p>
+                        <p>• Explore government schemes</p>
+                        <p>• Focus on debt reduction</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>AI Mentor - Artha</h3>
+                    <p>Your personal financial guide</p>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai">
+                        <p>नमस्ते! I'm Artha, your AI financial mentor. I can help you with budgeting, investments, and career guidance. What would you like to learn today?</p>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask about budgeting, investments, or career advice...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <div class="learning-paths">
+                <div class="path-card" onclick="startLearningPath('basics')">
+                    <div class="path-icon">💰</div>
+                    <h3>Financial Basics</h3>
+                    <p>Learn about budgeting, saving, and basic financial concepts</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                </div>
+
+                <div class="path-card" onclick="startLearningPath('investment')">
+                    <div class="path-icon">📈</div>
+                    <h3>Investment Mastery</h3>
+                    <p>Explore stocks, mutual funds, and investment strategies</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%"></div>
+                    </div>
+                </div>
+
+                <div class="path-card" onclick="startLearningPath('insurance')">
+                    <div class="path-icon">🛡️</div>
+                    <h3>Insurance & Protection</h3>
+                    <p>Understand different types of insurance and risk management</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+
+                <div class="path-card" onclick="startLearningPath('career')">
+                    <div class="path-icon">🎯</div>
+                    <h3>Career Growth</h3>
+                    <p>Get personalized job and course recommendations</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 20%"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Onboarding Modal -->
+    <div class="modal" id="onboardingModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Welcome to नारिणिवेश</h2>
+            <p>Help us personalize your learning experience</p>
+            
+            <div class="form-group">
+                <label for="userName">Name:</label>
+                <input type="text" id="userName" placeholder="Enter your name">
+            </div>
+            
+            <div class="form-group">
+                <label for="userIncome">Monthly Income (₹):</label>
+                <input type="number" id="userIncome" placeholder="25000">
+            </div>
+            
+            <div class="form-group">
+                <label for="userLocation">Location:</label>
+                <input type="text" id="userLocation" placeholder="Mumbai, Maharashtra">
+            </div>
+            
+            <div class="form-group">
+                <label for="userGoal">Primary Financial Goal:</label>
+                <select id="userGoal">
+                    <option value="emergency">Build Emergency Fund</option>
+                    <option value="investment">Start Investing</option>
+                    <option value="debt">Pay Off Debt</option>
+                    <option value="home">Buy a Home</option>
+                    <option value="retirement">Plan for Retirement</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="userEducation">Education Level:</label>
+                <select id="userEducation">
+                    <option value="school">High School</option>
+                    <option value="college">College Graduate</option>
+                    <option value="masters">Master's Degree</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <button class="cta-button" onclick="completeOnboarding()">Start Learning</button>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let userData = {
+            name: '',
+            income: 0,
+            location: '',
+            goal: '',
+            education: '',
+            language: 'en'
+        };
+
+        // Language translations
+        const translations = {
+            en: {
+                heroTitle: 'NARINIVESH - Smart Financial Learning',
+                heroSubtitle: 'Learn financial literacy through AI-powered chat in your local language',
+                startJourney: 'Start Your Journey'
+            },
+            hi: {
+                heroTitle: 'नारिणिवेश - स्मार्ट वित्तीय शिक्षा',
+                heroSubtitle: 'अपनी स्थानीय भाषा में AI-संचालित चैट के माध्यम से वित्तीय साक्षरता सीखें',
+                startJourney: 'अपनी यात्रा शुरू करें'
+            },
+            ta: {
+                heroTitle: 'நாரிணிவேஷ் - ஸ்மார்ட் நிதி கல்வி',
+                heroSubtitle: 'உங்கள் உள்ளூர் மொழியில் AI-இயங்கும் அரட்டை மூலம் நிதி கல்வியை கற்றுக்கொள்ளுங்கள்',
+                startJourney: 'உங்கள் பயணத்தை தொடங்குங்கள்'
+            }
+        };
+
+        // AI Response templates
+        const aiResponses = {
+            budgeting: [
+                "Great question about budgeting! Based on your income of ₹{income}, I recommend the 50-30-20 rule: 50% for needs, 30% for wants, 20% for savings.",
+                "For someone earning ₹{income} in {location}, start with tracking expenses for a month. Then allocate ₹{savings} monthly for savings.",
+                "Budgeting tip: Use apps like Money Manager or create a simple Excel sheet. Prioritize emergency fund first!"
+            ],
+            investment: [
+                "For investment advice: With your income of ₹{income}, start with SIP of ₹{sip} in diversified mutual funds.",
+                "Consider starting with Index funds - they're low-cost and perfect for beginners. Invest ₹{sip} monthly.",
+                "PPF is tax-saving and gives 7.1% returns. You can invest up to ₹1.5 lakh annually for tax benefits."
+            ],
+            career: [
+                "Based on your {education} background, I recommend exploring digital marketing, data analysis, or financial advisory roles.",
+                "For career growth in {location}, consider courses in: Financial Planning, Digital Marketing, Data Analytics, or Python programming.",
+                "Job opportunities in {location}: Look at companies like Bajaj Finance, HDFC Bank, or tech startups for financial roles."
+            ],
+            general: [
+                "I'm here to help with your financial journey! Ask me about budgeting, investments, insurance, or career guidance.",
+                "Remember, small steps lead to big changes. Start with saving ₹500 monthly and gradually increase it.",
+                "Financial literacy is key to financial freedom. What specific area would you like to explore today?"
+            ]
+        };
+
+        // Initialize the app
+        function init() {
+            // Set up event listeners
+            document.getElementById('languageSelect').addEventListener('change', changeLanguage);
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') sendMessage();
+            });
+        }
+
+        // Language switching
+        function changeLanguage() {
+            const selectedLang = document.getElementById('languageSelect').value;
+            userData.language = selectedLang;
+            
+            const trans = translations[selectedLang];
+            if (trans) {
+                document.getElementById('heroTitle').textContent = trans.heroTitle;
+                document.getElementById('heroSubtitle').textContent = trans.heroSubtitle;
+            }
+        }
+
+        // Onboarding
+        function showOnboarding() {
+            document.getElementById('onboardingModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('onboardingModal').style.display = 'none';
+        }
+
+        function completeOnboarding() {
+            userData.name = document.getElementById('userName').value;
+            userData.income = parseInt(document.getElementById('userIncome').value);
+            userData.location = document.getElementById('userLocation').value;
+            userData.goal = document.getElementById('userGoal').value;
+            userData.education = document.getElementById('userEducation').value;
+            
+            closeModal();
+            showDashboard();
+            generatePersonalizedAdvice();
+            
+            // Welcome message
+            const welcomeMsg = `Welcome ${userData.name}! I've analyzed your profile and created a personalized learning plan for you. Let's start your financial journey! 🚀`;
+            addMessage(welcomeMsg, 'ai');
+        }
+
+        function showDashboard() {
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+        }
+
+        // Generate personalized advice
+        function generatePersonalizedAdvice() {
+            const advice = document.getElementById('personalizedAdvice');
+            const income = userData.income;
+            const goal = userData.goal;
+            
+            let recommendations = [];
+            
+            // Income-based recommendations
+            if (income < 25000) {
+                recommendations.push(`• Start with ₹${Math.round(income * 0.1)} monthly SIP`);
+                recommendations.push('• Focus on skill development courses');
+                recommendations.push('• Build emergency fund of ₹15,000');
+            } else if (income < 50000) {
+                recommendations.push(`• Start with ₹${Math.round(income * 0.15)} monthly SIP`);
+                recommendations.push('• Build emergency fund of ₹50,000');
+                recommendations.push('• Consider term insurance');
+            } else {
+                recommendations.push(`• Start with ₹${Math.round(income * 0.20)} monthly SIP`);
+                recommendations.push('• Diversify into ELSS for tax saving');
+                recommendations.push('• Consider real estate investment');
+            }
+            
+            // Goal-based recommendations
+            switch(goal) {
+                case 'emergency':
+                    recommendations.push('• Priority: 6-month expense emergency fund');
+                    break;
+                case 'investment':
+                    recommendations.push('• Start with large-cap mutual funds');
+                    break;
+                case 'debt':
+                    recommendations.push('• Use debt avalanche method');
+                    break;
+                case 'home':
+                    recommendations.push('• Start saving for 20% down payment');
+                    break;
+                case 'retirement':
+                    recommendations.push('• Maximize EPF contribution');
+                    break;
+            }
+            
+            advice.innerHTML = `
+                <p><strong>Based on your profile:</strong></p>
+                ${recommendations.map(rec => `<p>${rec}</p>`).join('')}
+            `;
+        }
+
+        // Chat functionality
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI processing delay
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addMessage(response, 'ai');
+            }, 1000);
+        }
+
+        function addMessage(message, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<p>${message}</p>`;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateAIResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            let responseType = 'general';
+            
+            // Determine response type based on keywords
+            if (message.includes('budget') || message.includes('expense') || message.includes('money')) {
+                responseType = 'budgeting';
+            } else if (message.includes('invest') || message.includes('sip') || message.includes('mutual fund') || message.includes('stocks')) {
+                responseType = 'investment';
+            } else if (message.includes('job') || message.includes('career') || message.includes('course') || message.includes('skill')) {
+                responseType = 'career';
+            }
+            
+            // Get random response from the appropriate category
+            const responses = aiResponses[responseType];
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            
+            // Replace placeholders with user data
+            return randomResponse
+                .replace('{income}', userData.income || '25000')
+                .replace('{location}', userData.location || 'your city')
+                .replace('{education}', userData.education || 'your')
+                .replace('{savings}', Math.round((userData.income || 25000) * 0.2))
+                .replace('{sip}', Math.round((userData.income || 25000) * 0.15));
+        }
+
+        // Learning paths
+        function startLearningPath(path) {
+            const pathMessages = {
+                basics: "Great choice! Let's start with Financial Basics. First lesson: What is budgeting and why is it important? Budgeting helps you track income and expenses, ensuring you live within your means.",
+                investment: "Excellent! Investment Mastery path selected. Lesson 1: Understanding Risk vs Return. Higher returns usually come with higher risks. Diversification helps manage risk.",
+                insurance: "Smart move! Insurance protects your financial future. Let's start with term life insurance - it's the most cost-effective way to protect your family's financial security.",
+                career: "Perfect! Based on your profile, I recommend exploring: 1) Financial Planning Certification, 2) Digital Marketing courses, 3) Data Analytics bootcamp. Which interests you most?"
+            };
+            
+            addMessage(pathMessages[path], 'ai');
+            
+            // Update progress
+            updateProgress(path);
+        }
+
+        function updateProgress(completedPath) {
+            // Simulate progress update
+            const progressBar = document.getElementById('overallProgress');
+            const currentWidth = parseInt(progressBar.style.width);
+            const newWidth = Math.min(currentWidth + 10, 100);
+            progressBar.style.width = newWidth + '%';
+            
+            // Add achievement badge
+            if (newWidth >= 50 && !document.querySelector('.badge.intermediate')) {
+                const badgesContainer = document.querySelector('.badges');
+                const newBadge = document.createElement('div');
+                newBadge.className = 'badge intermediate';
+                newBadge.textContent = '🌟 Intermediate';
+                badgesContainer.appendChild(newBadge);
+            }
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Add some interactive elements
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('path-card')) {
+                e.target.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    e.target.style.transform = 'translateY(-5px)';
+                }, 150);
+            }
+        });
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const tips = [
+                "💡 Tip: Review your budget monthly to stay on track!",
+                "📊 Market insight: SIP returns are averaging 12% annually",
+                "🎯 Goal reminder: You're 45% towards your emergency fund!",
+                "🏆 Achievement unlocked: 7-day learning streak!"
+            ];
+            
+            if (Math.random() > 0.98) { // 2% chance every interval
+                const randomTip = tips[Math.floor(Math.random() * tips.length)];
+                // Could add notification system here
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
